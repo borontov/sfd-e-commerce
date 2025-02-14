@@ -1,5 +1,4 @@
 from django.db.models.signals import post_save
-from django.db.transaction import atomic
 from django.dispatch import receiver
 import logging
 
