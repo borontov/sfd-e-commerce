@@ -1,5 +1,6 @@
 import random
 
+from django.db.transaction import atomic
 from rest_framework.viewsets import ModelViewSet
 
 from transactions.api.serializers import TransactionSerializer
@@ -12,6 +13,6 @@ class TransactionViewSet(ModelViewSet):
     serializer_class = TransactionSerializer
 
     def perform_create(self, serializer):
-        serializer.save(status=random.choice(TransactionStatus.values))
-
-
+        with atomic():
+            # simulate a real transaction
+            serializer.save(status=random.choice(TransactionStatus.values))
