@@ -1,0 +1,74 @@
+services:
+  web:
+    build: .
+    command: gunicorn ecommerce.wsgi:application --bind 0.0.0.0:8000 --reload
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:6-alpine
+    volumes:
+      - redis_data:/data
+
+  celery-worker:
+    build: .
+    command: celery -A ecommerce worker -l info
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+
+  celery-beat:
+    build: .
+    command: celery -A ecommerce beat -l info
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+
+  test:
+    build: .
+    env_file:
+      - .env
+    command: >
+      sh -c "python manage.py test --parallel --noinput
+      && coverage run -m pytest
+      && coverage report
+      && coverage xml"
+
+  lint:
+    build: .
+    command: >
+      sh -c "flake8 .
+      && pylint --recursive=y --exit-zero **/*.py
+      && mypy --install-types --non-interactive .
+      && ruff check ."
+
+volumes:
+  postgres_data:
+  redis_data:
