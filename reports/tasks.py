@@ -11,6 +11,8 @@ from reports.models import Report
 from django.utils import timezone
 import logging
 
+from transactions.constants import TransactionStatus
+
 logger = logging.getLogger(__name__)
 
 
@@ -33,9 +35,8 @@ def generate_report(self) -> None:
                 ProductPriceRecord.objects
                 .filter(
                     created_at__range=[start_date, end_date],
-                    transaction__order__status=OrderStatus.COMPLETED,
+                    transaction__status=TransactionStatus.COMPLETED,
                 )
-                .select_related("transaction__order")
                 .aggregate(
                     total_revenue=Sum(
                         F("price") * F("quantity"),
