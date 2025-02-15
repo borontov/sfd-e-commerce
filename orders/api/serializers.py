@@ -36,6 +36,7 @@ class OrderSerializer(serializers.ModelSerializer):
         return order
 
     def get_transaction(self, obj):
+        transaction_instance = obj.transactions.order_by('-created_at').first()
         return TransactionSerializer(
-            instance=obj.transactions.order_by('-created_at').first(),
-        ).data
+            instance=transaction_instance,
+        ).data if transaction_instance else None
