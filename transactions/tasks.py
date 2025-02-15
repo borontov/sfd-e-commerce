@@ -24,12 +24,12 @@ def transaction_processing_simulation(self) -> None:
             Transaction.objects
             .select_for_update()  # lock rows for update
             .select_related('order')  # prefetch related order
-            .filter(status=TransactionStatus.PENDING)
+            .filter(status=TransactionStatus.PENDING.value)
         )
 
         for transaction in transactions:
             transaction.status = random.choice(
-                (TransactionStatus.COMPLETED, TransactionStatus.FAILED)
+                (TransactionStatus.COMPLETED.value, TransactionStatus.FAILED.value)
             )
             transaction.save()
             logger.info(f"Transaction {transaction.id} status changed to {transaction.status}")

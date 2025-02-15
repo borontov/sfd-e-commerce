@@ -51,7 +51,7 @@ def generate_report(self, start_date: str, end_date: str) -> None:
 
         number_of_returns = Order.objects.filter(
             created_at__range=[parsed_start_date, parsed_end_date],
-            status=OrderStatus.CANCELLED
+            status=OrderStatus.CANCELLED.value
         ).count()
 
         profit = total_revenue - total_cost

@@ -9,12 +9,13 @@ class Order(BaseModel):
     email = models.EmailField()
     cart_items = models.ManyToManyField('products.Product', through='orders.OrderCartItem')
     status = models.CharField(max_length=255, choices=OrderStatus.choices, default=OrderStatus.PAYMENT_WAITING)
+    status = models.CharField(max_length=255, choices=OrderStatus.choices, default=OrderStatus.PAYMENT_WAITING.value)
 
     @property
     def is_paid(self) -> bool:
         return self.transactions.filter(
             status__in=(
-                TransactionStatus.COMPLETED, TransactionStatus.PENDING
+                TransactionStatus.COMPLETED.value, TransactionStatus.PENDING.value
             )
         ).exists()
 

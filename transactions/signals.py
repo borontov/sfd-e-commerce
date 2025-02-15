@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 
 @receiver(post_save, sender=Transaction)
 def change_order_status_on_succeeded_payment(sender, instance, created, **kwargs):
-    if instance.status == TransactionStatus.COMPLETED:
-        instance.order.status = OrderStatus.PROCESSING
+    if instance.status == TransactionStatus.COMPLETED.value:
+        instance.order.status = OrderStatus.PROCESSING.value
         instance.order.save()
         logger.info(f"Order {instance.order.id} status changed to {instance.order.status}")
         for cart_item in instance.order.cart_items.all():

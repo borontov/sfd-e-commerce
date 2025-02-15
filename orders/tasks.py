@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 def cancel_order_task(self, *, order_id: int) -> None:
     try:
         order = Order.objects.get(pk=order_id)
-        order.status = OrderStatus.CANCELLED
+        order.status = OrderStatus.CANCELLED.value
         order.save()
         ... # additional refund logic
 
