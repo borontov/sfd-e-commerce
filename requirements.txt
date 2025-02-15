@@ -5,6 +5,7 @@ psycopg2-binary
 gunicorn
 celery[redis]
 django-environ
+django_redis
 
 # Dev
 pylint

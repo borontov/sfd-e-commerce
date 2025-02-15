@@ -102,16 +102,23 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-        },
+CELERY_BEAT_SCHEDULE = {
+    'transaction_processing_simulation': {
+        'task': 'transactions.tasks.transaction_processing_simulation',
+        'schedule': 5.0,
     },
-    "root": {
-        "handlers": ["console"],
-        "level": "INFO",
+    'refresh_currency_rates': {
+        'task': 'currency.tasks.refresh_currency_rates',
+        'schedule': 5.0,
     },
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://redis:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
 }
