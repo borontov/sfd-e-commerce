@@ -11,6 +11,7 @@ from drf_yasg import openapi
 from orders.api.viewsets import OrderViewSet, OrderCartItemViewSet
 from prices.api.viewsets import ProductPriceRecordViewSet
 from products.api.viewsets import ProductViewSet
+from reports.api.viewsets import ReportViewSet
 from transactions.api.viewsets import TransactionViewSet
 
 schema_view = get_schema_view(
@@ -34,6 +35,7 @@ router_v1.register(r'customers/addresses', CustomerAddressViewSet)
 router_v1.register(r'customers/phones', CustomerPhoneViewSet)
 router_v1.register(r'product_price_records', ProductPriceRecordViewSet)
 router_v1.register(r'order_cart_items', OrderCartItemViewSet)
+router_v1.register(r'reports', ReportViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
