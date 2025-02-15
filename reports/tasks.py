@@ -4,7 +4,7 @@ from celery import shared_task
 from django.db.models import Sum, F, DecimalField
 from django.db.transaction import atomic
 
-from orders.business_logic.constants import OrderStatus
+from orders.constants import OrderStatus
 from orders.models import Order
 from prices.models import ProductPriceRecord
 from reports.models import Report

@@ -2,7 +2,7 @@ from celery import shared_task
 from django.db import OperationalError
 from django.db.transaction import atomic
 
-from orders.business_logic.constants import OrderStatus
+from orders.constants import OrderStatus
 from orders.models import Order
 import logging
 

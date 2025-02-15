@@ -1,7 +1,7 @@
 from django.db import models
 
 from common.models import BaseModel
-from orders.business_logic.constants import OrderStatus
+from orders.constants import OrderStatus
 from transactions.constants import TransactionStatus
 
 

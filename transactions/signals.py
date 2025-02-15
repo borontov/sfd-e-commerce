@@ -2,7 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 import logging
 
-from orders.business_logic.constants import OrderStatus
+from orders.constants import OrderStatus
 from transactions.constants import TransactionStatus
 from transactions.models import Transaction
 
