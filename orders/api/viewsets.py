@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from orders.api.serializers import OrderSerializer
-from orders.business_logic.constants import OrderStatus
 from orders.models import Order
+from orders.tasks import cancel_order_task
 
 
 class OrderViewSet(ModelViewSet):
@@ -12,8 +12,5 @@ class OrderViewSet(ModelViewSet):
     serializer_class = OrderSerializer
 
     def cancel_order(self, request, pk=None):
-        order = self.get_object()
-        order.status = OrderStatus.CANCELLED
-        order.save()
+        cancel_order_task.delay(pk)
         return Response(status=status.HTTP_200_OK)
-
