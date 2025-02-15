@@ -10,7 +10,7 @@
 
 5. Fix linter warnings
 
-6. Check bottlenecks and optimise
+6. Check bottlenecks and optimise (add indexes, use caching, etc.)
 
 7. Write README
 
