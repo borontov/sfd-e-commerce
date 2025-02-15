@@ -5,6 +5,7 @@ from django.core.cache import cache
 from django.db.transaction import atomic
 from rest_framework.viewsets import ModelViewSet
 
+from currency.models import Currency
 from transactions.api.serializers import TransactionSerializer
 from transactions.constants import TransactionStatus
 from transactions.models import Transaction
@@ -32,7 +33,11 @@ class TransactionViewSet(ModelViewSet):
         serializer.save(
             status=status,
             amount=amount_in_currency,
-            tax=tax_in_currency
+            tax=tax_in_currency,
+            currency=Currency.objects.create(
+                name=currency_name,
+                rate=currency_rate,
+            ),
         )
 
     def _simulate_third_party_payment(self, serializer):

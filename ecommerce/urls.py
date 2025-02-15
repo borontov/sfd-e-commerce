@@ -8,7 +8,7 @@ from rest_framework import permissions, routers
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-from orders.api.viewsets import OrderViewSet
+from orders.api.viewsets import OrderViewSet, OrderCartItemViewSet
 from prices.api.viewsets import ProductPriceRecordViewSet
 from products.api.viewsets import ProductViewSet
 from transactions.api.viewsets import TransactionViewSet
@@ -33,6 +33,7 @@ router_v1.register(r'customers', CustomerViewSet)
 router_v1.register(r'customers/addresses', CustomerAddressViewSet)
 router_v1.register(r'customers/phones', CustomerPhoneViewSet)
 router_v1.register(r'product_price_records', ProductPriceRecordViewSet)
+router_v1.register(r'order_cart_items', OrderCartItemViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
