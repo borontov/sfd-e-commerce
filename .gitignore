@@ -1,0 +1,4 @@
+.idea/
+ecommerce/static/*
+ecommerce/staticfiles/*
+.gitignore
