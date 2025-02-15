@@ -8,6 +8,7 @@ from transactions.models import Transaction
 
 
 class ProductPriceRecord(BaseModel):
+    """Only created upon a successful transaction"""
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     price = DecimalField(max_digits=10, decimal_places=2)
