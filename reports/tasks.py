@@ -1,4 +1,4 @@
-from datetime import timedelta, datetime
+from datetime import datetime
 
 from celery import shared_task
 from django.db.models import Sum, F, DecimalField
@@ -10,7 +10,6 @@ from prices.models import ProductPriceRecord
 from reports.models import Report
 import logging
 
-from transactions.constants import TransactionStatus
 
 logger = logging.getLogger(__name__)
 
