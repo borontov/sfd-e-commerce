@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from celery import shared_task
 from django.db.models import Sum, F, DecimalField
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task(bind=True, max_retries=3, default_retry_delay=60)
-def generate_report(self) -> None:
+def generate_report(self, start_date: str, end_date: str) -> None:
     """
     Generate a summary report for a selected time period, including:
     ▪ Total revenue
@@ -27,14 +27,13 @@ def generate_report(self) -> None:
     """
     try:
         with atomic():
-            today = timezone.now().date()
-            start_date = today - timedelta(days=7)
-            end_date = today
+            parsed_start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+            parsed_end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
 
             aggregator = (
                 ProductPriceRecord.objects
                 .filter(
-                    created_at__range=[start_date, end_date],
+                    created_at__range=[parsed_start_date, parsed_end_date],
                     transaction__status=TransactionStatus.COMPLETED,
                 )
                 .aggregate(
@@ -54,15 +53,15 @@ def generate_report(self) -> None:
             number_of_units_sold = aggregator["number_of_units_sold"] or 0
 
             number_of_returns = Order.objects.filter(
-                created_at__range=[start_date, end_date],
+                created_at__range=[parsed_start_date, parsed_end_date],
                 status=OrderStatus.CANCELLED
             ).count()
 
             profit = total_revenue - total_cost
 
             Report.objects.create(
-                start_date=start_date,
-                end_date=end_date,
+                start_date=parsed_start_date,
+                end_date=parsed_end_date,
                 total_revenue=total_revenue,
                 profit=profit,
                 number_of_units_sold=number_of_units_sold,
