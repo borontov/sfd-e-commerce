@@ -15,3 +15,9 @@
 7. Write README
 
 8. Apply automatic code formatting and commit changes
+
+# How to run the project
+
+1. Clone the repository
+2. docker compose up -d --build
+3. Go to http://localhost:8000/swagger/
