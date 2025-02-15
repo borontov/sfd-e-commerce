@@ -17,7 +17,8 @@ class OrderViewSet(ModelViewSet):
 
     @action(detail=True, methods=['post'], url_path='cancel', serializer_class=EmptySerializer)
     def cancel_order(self, request, pk=None):
-        if Order.objects.filter(id=pk, status=OrderStatus.PROCESSING.value).exists():
+        order = self.get_object()
+        if order.status == OrderStatus.PROCESSING.value:
             cancel_order_task.delay(order_id=pk)
             return Response(status=status.HTTP_200_OK)
         raise PermissionDenied("Order can't be cancelled")
