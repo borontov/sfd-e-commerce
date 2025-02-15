@@ -12,5 +12,5 @@ class OrderViewSet(ModelViewSet):
     serializer_class = OrderSerializer
 
     def cancel_order(self, request, pk=None):
-        cancel_order_task.delay(pk)
+        cancel_order_task.delay(order_id=pk)
         return Response(status=status.HTTP_200_OK)
