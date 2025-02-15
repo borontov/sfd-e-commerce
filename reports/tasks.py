@@ -33,7 +33,6 @@ def generate_report(self, start_date: str, end_date: str) -> None:
             ProductPriceRecord.objects
             .filter(
                 created_at__range=[parsed_start_date, parsed_end_date],
-                transaction__status=TransactionStatus.COMPLETED,
             )
             .aggregate(
                 total_revenue=Sum(
