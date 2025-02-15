@@ -35,11 +35,11 @@ def generate_report(self, start_date: str, end_date: str) -> None:
             )
             .aggregate(
                 total_revenue=Sum(
-                    F("price") * F("quantity"),
+                    F("price") * F("quantity") / F("currency__rate"),
                     output_field=DecimalField(max_digits=20, decimal_places=2)
                 ),
                 total_cost=Sum(
-                    F("cost") * F("quantity"),
+                    F("cost") * F("quantity") / F("currency__rate"),
                     output_field=DecimalField(max_digits=20, decimal_places=2)
                 ),
                 number_of_units_sold=Sum("quantity")

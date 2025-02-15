@@ -21,6 +21,18 @@ class Transaction(BaseModel):
     status = models.CharField(
         choices=TransactionStatus.choices,
         max_length=255,
-        null=False,
+        null=True,
+        blank=False,
+    )
+    tax = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=False,
+    )
+    currency = models.ForeignKey(
+        'currency.Currency',
+        on_delete=models.PROTECT,
+        null=True,
         blank=False,
     )

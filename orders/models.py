@@ -7,7 +7,7 @@ from transactions.constants import TransactionStatus
 
 class Order(BaseModel):
     email = models.EmailField()
-    products = models.ManyToManyField('products.Product')
+    cart_items = models.ManyToManyField('products.Product', through='orders.OrderCartItem')
     status = models.CharField(max_length=255, choices=OrderStatus.choices, default=OrderStatus.PAYMENT_WAITING)
 
     @property
@@ -15,5 +15,10 @@ class Order(BaseModel):
         return self.transactions.filter(
             status__in=(
                 TransactionStatus.COMPLETED, TransactionStatus.PENDING
-            ).exists()
-        )
+            )
+        ).exists()
+
+class OrderCartItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
+    product = models.ForeignKey('products.Product', on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
