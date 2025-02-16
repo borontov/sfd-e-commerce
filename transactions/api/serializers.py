@@ -7,8 +7,6 @@ from transactions.models import Transaction
 class TransactionSerializer(serializers.ModelSerializer):
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
     currency_name = serializers.CharField(max_length=3, required=False, default='USD', write_only=True)
-    tax_in_usd = serializers.DecimalField(max_digits=10, decimal_places=2, required=False, default=0, write_only=True)
-    amount_in_usd = serializers.DecimalField(max_digits=10, decimal_places=2, required=False, default=0, write_only=True)
     product_price_records = serializers.SerializerMethodField(read_only=True)
     currency = serializers.SerializerMethodField(read_only=True)
 
