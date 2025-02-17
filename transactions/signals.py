@@ -16,9 +16,7 @@ logger = logging.getLogger(__name__)
 
 @receiver(post_save, sender=Transaction)
 def change_order_status_on_succeeded_payment(
-    sender: Type[Transaction],
     instance: Transaction,
-    created: bool,
     **kwargs
 ) -> None:
     if instance.status != TransactionStatus.COMPLETED.value:
