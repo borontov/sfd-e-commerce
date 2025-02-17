@@ -6,9 +6,9 @@ from transactions.constants import TransactionStatus
 
 class Transaction(BaseModel):
     order = models.ForeignKey(
-        'orders.Order',
+        "orders.Order",
         on_delete=models.PROTECT,
-        related_name='transactions',
+        related_name="transactions",
         null=False,
         blank=False,
     )
@@ -31,7 +31,7 @@ class Transaction(BaseModel):
         blank=False,
     )
     currency = models.ForeignKey(
-        'currency.Currency',
+        "currency.Currency",
         on_delete=models.PROTECT,
         null=True,
         blank=False,

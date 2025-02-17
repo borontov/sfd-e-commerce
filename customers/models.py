@@ -12,9 +12,7 @@ class Customer(BaseModel):
 
 class CustomerAddress(BaseModel):
     customer = models.ForeignKey(
-        Customer,
-        on_delete=models.CASCADE,
-        related_name='addresses'
+        Customer, on_delete=models.CASCADE, related_name="addresses"
     )
     address = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
@@ -27,9 +25,7 @@ class CustomerAddress(BaseModel):
 
 class CustomerPhone(BaseModel):
     customer = models.ForeignKey(
-        Customer,
-        on_delete=models.CASCADE,
-        related_name='phones'
+        Customer, on_delete=models.CASCADE, related_name="phones"
     )
     country_code = models.CharField(max_length=10)
     phone = models.CharField(max_length=20)

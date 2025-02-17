@@ -1,6 +1,8 @@
 from rest_framework.viewsets import ModelViewSet
 
-from customers.api.serializers import CustomerSerializer, CustomerAddressSerializer, CustomerPhoneSerializer
+from customers.api.serializers import (CustomerAddressSerializer,
+                                       CustomerPhoneSerializer,
+                                       CustomerSerializer)
 from customers.models import Customer, CustomerAddress, CustomerPhone
 
 

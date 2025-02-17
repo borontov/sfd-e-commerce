@@ -1,9 +1,8 @@
+import logging
 from decimal import Decimal
-from typing import Type
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-import logging
 
 from common.constants import TAX_RATE
 from orders.constants import OrderStatus
@@ -16,14 +15,15 @@ logger = logging.getLogger(__name__)
 
 @receiver(post_save, sender=Transaction)
 def change_order_status_on_succeeded_payment(
-    instance: Transaction,
-    **kwargs
+    instance: Transaction, **kwargs
 ) -> None:
     if instance.status != TransactionStatus.COMPLETED.value:
         return
     instance.order.status = OrderStatus.PROCESSING.value
     instance.order.save()
-    logger.info(f"Order {instance.order.id} status changed to {instance.order.status}")
+    logger.info(
+        f"Order {instance.order.id} status changed to {instance.order.status}"
+    )
     amount = Decimal(0)
     for cart_item in instance.order.cart_items.all():
         price_in_usd = cart_item.product.price * cart_item.quantity

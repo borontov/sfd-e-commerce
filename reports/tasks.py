@@ -1,15 +1,14 @@
+import logging
 from datetime import datetime
 
 from celery import shared_task
-from django.db.models import Sum, F, DecimalField
+from django.db.models import DecimalField, F, Sum
 from django.db.transaction import atomic
 
 from orders.constants import OrderStatus
 from orders.models import Order
 from prices.models import ProductPriceRecord
 from reports.models import Report
-import logging
-
 
 logger = logging.getLogger(__name__)
 
@@ -28,22 +27,18 @@ def generate_report(self, start_date: str, end_date: str) -> None:
         parsed_start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
         parsed_end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
 
-        aggregator = (
-            ProductPriceRecord.objects
-            .filter(
-                created_at__range=[parsed_start_date, parsed_end_date],
-            )
-            .aggregate(
-                total_revenue=Sum(
-                    F("price") * F("quantity") / F("currency__rate"),
-                    output_field=DecimalField(max_digits=20, decimal_places=2)
-                ),
-                total_cost=Sum(
-                    F("cost") * F("quantity") / F("currency__rate"),
-                    output_field=DecimalField(max_digits=20, decimal_places=2)
-                ),
-                number_of_units_sold=Sum("quantity")
-            )
+        aggregator = ProductPriceRecord.objects.filter(
+            created_at__range=[parsed_start_date, parsed_end_date],
+        ).aggregate(
+            total_revenue=Sum(
+                F("price") * F("quantity") / F("currency__rate"),
+                output_field=DecimalField(max_digits=20, decimal_places=2),
+            ),
+            total_cost=Sum(
+                F("cost") * F("quantity") / F("currency__rate"),
+                output_field=DecimalField(max_digits=20, decimal_places=2),
+            ),
+            number_of_units_sold=Sum("quantity"),
         )
         total_revenue = aggregator["total_revenue"] or 0
         total_cost = aggregator["total_cost"] or 0
@@ -51,7 +46,7 @@ def generate_report(self, start_date: str, end_date: str) -> None:
 
         number_of_returns = Order.objects.filter(
             created_at__range=[parsed_start_date, parsed_end_date],
-            status=OrderStatus.CANCELLED.value
+            status=OrderStatus.CANCELLED.value,
         ).count()
 
         profit = total_revenue - total_cost
@@ -67,4 +62,3 @@ def generate_report(self, start_date: str, end_date: str) -> None:
     except Exception as exc:
         logger.error(f"Failed to generate report: {exc}")
         raise self.retry(exc=exc)
-

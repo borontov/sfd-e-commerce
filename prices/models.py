@@ -9,6 +9,7 @@ from transactions.models import Transaction
 
 class ProductPriceRecord(BaseModel):
     """Only created upon a successful transaction"""
+
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     price = DecimalField(max_digits=10, decimal_places=2)
@@ -16,7 +17,7 @@ class ProductPriceRecord(BaseModel):
     quantity = models.PositiveIntegerField(default=1)
     transaction = models.ForeignKey(
         Transaction,
-        related_name='product_price_records',
+        related_name="product_price_records",
         on_delete=models.PROTECT,
         null=True,
     )

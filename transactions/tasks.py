@@ -1,3 +1,4 @@
+import logging
 import random
 
 from celery import shared_task
@@ -6,9 +7,9 @@ from django.db.transaction import atomic
 
 from transactions.constants import TransactionStatus
 from transactions.models import Transaction
-import logging
 
 logger = logging.getLogger(__name__)
+
 
 @shared_task(bind=True, max_retries=3, default_retry_delay=60)
 @atomic  # atomic is used to ensure that all operations are committed or rolled back as a whole
@@ -21,18 +22,22 @@ def transaction_processing_simulation(self) -> None:
     """
     try:
         transactions = (
-            Transaction.objects
-            .select_for_update()  # lock rows for update
-            .select_related('order')  # prefetch related order
+            Transaction.objects.select_for_update()  # lock rows for update
+            .select_related("order")  # prefetch related order
             .filter(status=TransactionStatus.PENDING.value)
         )
 
         for transaction in transactions:
             transaction.status = random.choice(
-                (TransactionStatus.COMPLETED.value, TransactionStatus.FAILED.value)
+                (
+                    TransactionStatus.COMPLETED.value,
+                    TransactionStatus.FAILED.value,
+                )
             )
             transaction.save()
-            logger.info(f"Transaction {transaction.id} status changed to {transaction.status}")
+            logger.info(
+                f"Transaction {transaction.id} status changed to {transaction.status}"
+            )
     except OperationalError as exc:
         logger.error(f"Failed to process transactions: {exc}")
         raise self.retry(exc=exc)

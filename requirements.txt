@@ -16,3 +16,5 @@ hypothesis
 django-debug-toolbar
 redis
 drf-yasg
+isort
+black
