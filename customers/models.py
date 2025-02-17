@@ -4,6 +4,12 @@ from common.models import BaseModel
 
 
 class Customer(BaseModel):
+    """
+    NOT USED IN CURRENT IMPLEMENTATION
+    Core customer model storing essential user information and account balance.
+    Acts as the primary model for customer-related operations.
+    """
+
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -11,6 +17,12 @@ class Customer(BaseModel):
 
 
 class CustomerAddress(BaseModel):
+    """
+    NOT USED IN CURRENT IMPLEMENTATION
+    Stores multiple addresses for customers with flags for shipping and billing purposes.
+    Each customer can have multiple addresses with different roles.
+    """
+
     customer = models.ForeignKey(
         Customer, on_delete=models.CASCADE, related_name="addresses"
     )
@@ -24,6 +36,12 @@ class CustomerAddress(BaseModel):
 
 
 class CustomerPhone(BaseModel):
+    """
+    NOT USED IN CURRENT IMPLEMENTATION
+    Manages customer phone numbers with verification status tracking.
+    Supports multiple phone numbers per customer with primary number designation.
+    """
+
     customer = models.ForeignKey(
         Customer, on_delete=models.CASCADE, related_name="phones"
     )

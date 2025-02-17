@@ -5,8 +5,11 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions, routers
 
-from customers.api.viewsets import (CustomerAddressViewSet,
-                                    CustomerPhoneViewSet, CustomerViewSet)
+from customers.api.viewsets import (
+    CustomerAddressViewSet,
+    CustomerPhoneViewSet,
+    CustomerViewSet,
+)
 from ecommerce import settings
 from orders.api.viewsets import OrderCartItemViewSet, OrderViewSet
 from prices.api.viewsets import ProductPriceRecordViewSet

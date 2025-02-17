@@ -6,6 +6,11 @@ from transactions.constants import TransactionStatus
 
 
 class Order(BaseModel):
+    """
+    Represents customer orders and their current status.
+    Links to cart items and tracks payment status through related transactions.
+    """
+
     email = models.EmailField()
     cart_items = models.ManyToManyField("orders.OrderCartItem")
     status = models.CharField(
@@ -25,5 +30,10 @@ class Order(BaseModel):
 
 
 class OrderCartItem(models.Model):
+    """
+    Individual items within an order, linking products with their ordered quantities.
+    Forms the detail level of order composition.
+    """
+
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)

@@ -4,6 +4,11 @@ from common.models import BaseModel
 
 
 class Product(BaseModel):
+    """
+    Central product catalog model tracking inventory, pricing, and cost information.
+    Maintains current stock levels and product details.
+    """
+
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     price = models.DecimalField(

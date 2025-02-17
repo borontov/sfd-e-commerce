@@ -5,6 +5,11 @@ from transactions.constants import TransactionStatus
 
 
 class Transaction(BaseModel):
+    """
+    Records financial transactions related to orders.
+    Tracks payment status, amounts, taxes, and currency information for each transaction.
+    """
+
     order = models.ForeignKey(
         "orders.Order",
         on_delete=models.PROTECT,
